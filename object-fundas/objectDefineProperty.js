@@ -74,3 +74,52 @@ Object.defineProperty(obj, 'key', withValue('static'));
 // removing the object prototype properties
 // (value, get, set, enumerable, writable, configurable)  
 (Object.freeze || Object)(Object.prototype);
+
+
+// creating a property
+// We can create a property using Object.defineProperty()
+// if a property does not exist.
+// fields may be omited from the description 
+// default values will be set
+var o = {}; // creating a new object
+
+//Example of an object property added
+// with defineProperty with a data property descriptor
+
+Object.defineProperty(o, 'a', {
+  value: 37,
+  writable: true,
+  enumerable: true,
+  configurable: true
+});
+
+// 'a' property exists in the o object and its value is 37
+
+//Example of an object property added
+// with defineProperty with an accessor proprty descriptor
+var bValue = 38;
+Object.defineProperty(o, 'b', {
+  // Using shorthand method names (ES2015 feature)
+  // this is equivaent to:
+  // get: function() { return bValue; },
+  // set: function(newValue) { bValue: newValue },
+  get() { return bValue; },
+  set(newValue) { bValue = newValue; },
+  enumerable: true,
+  configurable: true
+});
+
+o.b; // gives out put as 38
+// b property exists in the o object and its value is 38
+// the value of o.b is now always identical to bValue,
+// unless o.b is redefined
+
+// You cannot try to mix both:
+Object.defineProperty(o, 'conflict', {
+  value: 0x9f91102,
+  get() { return 0xdeadadd; }
+});
+
+// the above code gives TypeError: value appears
+// only in data descriptor
+// get appears only in accessor description
