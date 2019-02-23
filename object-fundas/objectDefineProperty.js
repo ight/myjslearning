@@ -123,3 +123,40 @@ Object.defineProperty(o, 'conflict', {
 // the above code gives TypeError: value appears
 // only in data descriptor
 // get appears only in accessor description
+
+
+
+// ModifyPropert
+// We can modify the property if the property already exist.
+// if the object has configurable proerty set to false then
+// it is not possible to change any attribute of 
+// non-configurable accessor property
+// data properties
+
+var o = {}; //create a new object
+
+Object.defineProperty(o, 'a', {
+  value: 37,
+  writable: false
+});
+
+
+console.log(o.a); // logs 37
+o.a = 25; // No error thrown
+// (it would throw in strict mode,
+// even if the value had been the same)
+
+console.log(o.a); // logs 37, The assignment did not work.
+
+
+// strict mode
+(function() {
+  'use strict';
+  var o = {};
+  object.defineProperty(o, 'b', {
+    value: 2,
+    writable: false
+  });
+  o.b = 3 // throws TypeError: "b" is read only
+  return o.b // return 2 without the line above
+}());
