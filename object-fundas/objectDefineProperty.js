@@ -221,3 +221,34 @@ p.c // undefined
 p.d // 4
 p[Symbol.for('e')] // 5
 p[Symbol.for('f')] // undefined
+
+// Configurable attribute
+//The configurable attribute controls at the same time whether 
+// the property can be deleted from the object and whether its 
+// attributes (other than value and writable) can be changed.
+var o = {};
+Object.defineProperty(o, 'a', {
+  get() { return 1; },
+  configurable: false
+});
+
+Object.defineProperty(o, 'a', {
+  configurable: true
+}); // throws a TypeError
+Object.defineProperty(o, 'a', {
+  enumerable: true
+}); // throws a TypeError
+Object.defineProperty(o, 'a', {
+  set() {}
+}); // throws a TypeError (set was undefined previously)
+Object.defineProperty(o, 'a', {
+  get() { return 1; }
+}); // throws a TypeError
+// (even though the new get does exactly the same thing)
+Object.defineProperty(o, 'a', {
+  value: 12
+}); // throws a TypeError
+
+console.log(o.a); // logs 1
+delete o.a; // Nothing happens
+console.log(o.a); // logs 1
