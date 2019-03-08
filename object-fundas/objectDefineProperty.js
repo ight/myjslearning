@@ -252,3 +252,81 @@ Object.defineProperty(o, 'a', {
 console.log(o.a); // logs 1
 delete o.a; // Nothing happens
 console.log(o.a); // logs 1
+
+
+// Adding properties and default values
+// There is often a difference between simply using dot notation 
+// to assign a value and using Object.defineProperty()
+// here is an example to show the concept
+
+var o ={};
+
+o.a = 1;
+
+// is equivalent to
+Object.defineProperty(o, 'a', {
+  value: 1,
+  writable: true;
+  configurable: true;
+  enumerable: true;
+});
+
+// on the other hand
+Object.defineProperty(o, 'a', { value: 1 });
+
+// is equivalent to
+Object.defineProperty(o, 'a', {
+  value: 1,
+  writable: false,
+  configurable: false,
+  enumerable: false
+});
+
+// custom setter and getter
+// The example below shows how to implement a self-archiving object. 
+// When temperature property is set, the archive array gets a log entry.
+
+function Archiver() {
+  var temperature = null;
+  var archive = [];
+
+  Object.defineProperty(this, 'temperature', {
+    get() {
+      console.log('get');
+      return temperature;
+    },
+    set(value) {
+      temperature = value;
+      archive.push({ val: temperature });
+    }
+  });
+
+  this.getArchive = function() { return archive; };
+}
+
+var arc = new Archiver();
+arc.temperature; //'get!'
+arc.temperature = 11;
+arc.temperature = 12;
+arc.getArchive(); // [{ val: 11 }, { val: 13 }]
+
+
+// now in this exmple getter always return same value
+var pattern = {
+  get() {
+    return "JavaScript is awsome";
+  },
+  set() {
+    this.myname = "Tmon";
+  }
+};
+
+function TestDefineSetAndGet() {
+  Object.defineProperty(this, 'myproperty', pattern);
+}
+
+var instance = new TestDefineSetAndGet();
+instance.myproperty = 'test';
+console.log(instance.myproperty);
+// returns: JavaScript is awsome
+console.log(instance.myname); // returns: Tmon
