@@ -330,3 +330,73 @@ instance.myproperty = 'test';
 console.log(instance.myproperty);
 // returns: JavaScript is awsome
 console.log(instance.myname); // returns: Tmon
+
+
+// Inheritance of properties
+// If an accessor property is inherited, its get and set methods will be called 
+// when the property is accessed and modified on descendant objects. 
+// If these methods use a variable to store the value, this value will be shared by all objects.
+
+// example
+function myclass() {
+
+}
+
+var value;
+Object.defineProperty(myclass.prototype, "x", {
+  get() {
+    return value;
+  },
+  set(x) {
+    value = x;
+  }
+});
+
+var a = new myclass();
+var b = new myclass();
+a.x = 1;
+console.log(b.x); // will give 1
+
+// Now this can be overcomed by storing the value
+// in someother property
+// in get and set method this is used to the object
+// which is being accessed or modified
+function myclass() {
+
+}
+
+Object.defineProperty(myclass.prototype, "x", {
+  get() {
+    return this.stored_x;
+  }
+  set(x) {
+    this.stored_x = x;
+  }
+});
+
+var a = new myclass();
+var b = new myclass();
+a.x = 1;
+console.log(b.x); // undefined not set.
+
+
+// Unlike accessor properties, value properties are always set on the object itself, 
+// not on a prototype. However, if a non-writable value property is inherited, 
+// it still prevents from modifying the property on the object.
+function myclass(){
+
+}
+
+myclass.prototype.x = 1;
+Object.defineProperty(myclass.prototype, "y", {
+  writable: false,
+  value: 1
+});
+
+var a = new myclass();
+a.x = 2;
+console.log(a.x); // 2
+console.log(myclass.prototype.x); // 1
+a.y = 2; // Ignored, throws in strict mode
+console.log(a.y); // 1
+console.log(myclass.prototype.y); // 1
