@@ -27,3 +27,13 @@ console.log(Object.entries(obj)); // [['0', 'a'], ['1', 'b'], ['2', 'c']]
 //array like object with random key ordering
 const anObj = { 100: 'a', 2: 'b', 7: 'c' };
 console.log(Object.entries(anObj)); // [['2','b'], ['7', 'c'], ['100', 'a']]
+
+// getFoo is property which isn't enumerable
+const myObj = Object.create({}, { getFoo: { value() { return this.foo; }}});
+myObj.foo = 'bar';
+console.log(Object.entries(myObj)); //[['foo', 'bar']]
+
+// non object argument will be coerced to an object
+console.log(Object.entries('foo'));
+
+// return an empty array for any primtive type
